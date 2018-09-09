@@ -5,7 +5,7 @@ import urllib2
 import urllib
 import json
 
-channelID = "@username_bot"
+channelID = "@ChannelID"
 botToken = ""
 sentFile = "" #Create a file in this path. So the bot can store last sent posts
 RedditLimit = 20
