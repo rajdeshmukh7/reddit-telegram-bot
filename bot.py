@@ -1,9 +1,7 @@
 #! /usr/bin/python2
 # -*- coding: utf-8 -*-
 
-import urllib2
-import urllib
-import json
+import urllib2, urllib, json
 
 channelID = "@ChannelID"
 botToken = ""
