@@ -1,53 +1,54 @@
 #! /usr/bin/python2
 # -*- coding: utf-8 -*-
-
 import urllib2, urllib, json
 
-channelID = "@ChannelID"
+# Config
+channelID = "@ChannelID" # Telegram channel ID
 botToken = ""
-sentFile = "" #Create a file in this path. So the bot can store last sent posts
-RedditLimit = 20
-RedditUrl = "https://reddit.com/r/YourSubreddit/new/.json?limit=" + str(RedditLimit)
-useragent = "Reddit Telegram Bot"
+sentFile = "" # Store last sent posts in this file
+redditLimit = 20
+redditUrl = "https://reddit.com/r/YourSubreddit/new/.json?limit=" + str(redditLimit)
+userAgent = "A Telegram Bot"
 
+# Send the message to the Telegram channel
 def sendMessage(msg):
-	msg = urllib.quote(msg)
-	url = "https://api.telegram.org/bot" + botToken  + "/sendMessage?chat_id=" + channelID + "&parse_mode=html&text=" + msg 
-	print " - Sending the post to telegram... "
-	urllib2.urlopen(url)
+	msg = urllib.quote(msg) # URL encode the message
+	url = "https://api.telegram.org/bot{0}/sendMessage?chat_id={1}&parse_mode=html&text={2}".format(botToken, channelID, msg)
+	print " - Sending the post to Telegram..."
+	urllib2.urlopen(url) # Open the URL
 
-def isSent(id):
-	file = open(sentFile,"r")
+# Check to see if post's ID is stored in the log file
+def isSent(postID):
+	file = open(sentFile, "r")
 	for line in file:
-		if id+'\n' == line:
-			file.close()
+		if line == postID + "\n":
 			return True
-	file.close()
 	return False
 
-def newSent(arr):
-	file = open(sentFile,"w")
-	for x in range(RedditLimit-1, -1, -1):
-		id = arr[x]["data"]["id"].encode("UTF-8").strip()
-		file.write(id+'\n')
-	file.close()
+# Store post IDs from Reddit's JSON response
+def saveSent(jsonList):
+	file = open(sentFile, "w")
+	for x in range(redditLimit-1, -1, -1):
+		postID = jsonList[x]["data"]["id"]
+                file.write(postID + "\n")
 
 opener = urllib2.build_opener()
-opener.addheaders = [("User-Agent", useragent)]
-jsonDownload = opener.open(RedditUrl)
-jsonData = json.loads(jsonDownload.read())["data"]["children"]
+opener.addheaders = [("User-Agent", userAgent)] # Add the useragent to the header
+print " - Sending the request to Reddit API. post limit: " + str(redditLimit)
+jsonResponse = opener.open(redditUrl)
+jsonList = json.loads(jsonResponse.read())
+jsonList = jsonList["data"]["children"]
 
-print " - Sending the request to Reddit API. post limit: " + str(RedditLimit)
+for x in range(redditLimit-1, -1, -1):
+	postTitle = jsonList[x]["data"]["title"]
+	postAuthor = jsonList[x]["data"]["author"]
+	postUrl = jsonList[x]["data"]["url"]
+	postID = jsonList[x]["data"]["id"]
+	postPermalink = "https://redd.it/" + postID
 
-for x in range(RedditLimit-1, -1, -1):
-	msgTitle = jsonData[x]["data"]["title"].encode("UTF-8").strip()
-	msgAuthor = jsonData[x]["data"]["author"].encode("UTF-8").strip()
-	msgUrl = jsonData[x]["data"]["url"].encode("UTF-8").strip()
-	msgID = jsonData[x]["data"]["id"].encode("UTF-8").strip()
-	msgPermalink = "https://redd.it/" + msgID
-	if isSent(msgID):
-		print " - Post already has been sent. ID: " + msgID
+	if isSent(postID):
+		print " - The post has been sent. ID: " + postID
 	else:
-		sendMessage("<b>{0}</b>\nby: {1}\n\n{2}\n\n💬<a href='{3}'>comments</a>".format(msgTitle,msgAuthor,msgUrl,msgPermalink))
-		newSent(jsonData)
-		print " - Post ID added to the log file: " + msgID
+		sendMessage("<b>{0}</b>\nby: {1}\n\n{2}\n\n💬<a href='{3}'>comments</a>".format(postTitle, postAuthor, postUrl, postPermalink))
+                saveSent(jsonList)
+		print " - Post ID added to the log file. ID: " + postID
