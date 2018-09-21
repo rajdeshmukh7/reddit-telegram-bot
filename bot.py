@@ -3,7 +3,7 @@
 import urllib2, urllib, json
 
 # Config
-channelID = "@ChannelID" # Telegram channel ID
+channelID = "@ChannelID" # Telegram channel ID. You can use a chat_id instead if you want to send them to a chat/group
 botToken = ""
 sentFile = "" # Store last sent posts in this file
 redditLimit = 20
