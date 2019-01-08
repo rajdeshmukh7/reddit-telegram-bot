@@ -50,5 +50,6 @@ for x in range(redditLimit-1, -1, -1):
 		print " - The post has been sent. ID: " + postID
 	else:
 		sendMessage("<b>{0}</b>\nby: {1}\n\n{2}\n\n💬<a href='{3}'>comments</a>".format(postTitle, postAuthor, postUrl, postPermalink))
-                saveSent(jsonList)
 		print " - Post ID added to the log file. ID: " + postID
+		
+saveSent(jsonList)
