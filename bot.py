@@ -3,11 +3,11 @@
 import urllib2, urllib, json
 
 # Config
-channelID = "@ChannelID" # Telegram channel ID. You can use a chat_id instead if you want to send them to a chat/group
-botToken = ""
+channelID = "@testungvvggg" # Telegram channel ID. You can use a chat_id instead if you want to send them to a chat/group
+botToken = "836483704:AAEEGzh8BYBq_Sx1qBvFUWffqlKieZDflyM"
 sentFile = "" # Store last sent posts in this file
 redditLimit = 20
-redditUrl = "https://reddit.com/r/YourSubreddit/new/.json?limit=" + str(redditLimit)
+redditUrl = "https://reddit.com/r/googleplaydeals/new/.json?limit=" + str(redditLimit)
 userAgent = "A Telegram Bot"
 
 # Send the message to the Telegram channel
