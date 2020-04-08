@@ -13,8 +13,3 @@
   "website": "https://telegra.ph/How-to-host-a-Telegram-Userbot-07-24",
   "success_url": "https://t.me/PaperplaneExtended",
   "stack": "container",
-  "env": {
-    "API_KEY": {
-      "description": "Get this value from my.telegram.org.",
-      "required": false
-    },
